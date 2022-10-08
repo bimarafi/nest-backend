@@ -1,26 +1,52 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
+import { Module } from './entities/module.entity';
 
 @Injectable()
 export class ModuleService {
-  create(createModuleDto: CreateModuleDto) {
-    return 'This action adds a new module';
+  constructor(
+    @InjectRepository(Module)
+    private modulesRepository: Repository<Module>,
+  ) {}
+
+  async create(createModuleDto: CreateModuleDto): Promise<Module> {
+    const newData = new Module();
+    newData.name = createModuleDto.name;
+    newData.label = createModuleDto.label;
+
+    return this.modulesRepository.save(newData);
   }
 
-  findAll() {
-    return `This action returns all module`;
+  async findAll(): Promise<Module[]> {
+    return await this.modulesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} module`;
+  async findOne(id: number): Promise<Module> {
+    try {
+      const module = await this.modulesRepository.findOneOrFail({
+        where: { id },
+      }); // SELECT * FROM users WHERE users.id = userId
+      return module;
+    } catch (error) {
+      // handle error
+      throw error;
+    }
   }
 
-  update(id: number, updateModuleDto: UpdateModuleDto) {
-    return `This action updates a #${id} module`;
+  async update(id: number, updateModuleDto: UpdateModuleDto): Promise<Module> {
+    const module = await this.findOne(id);
+    module.name = updateModuleDto.name;
+    module.label = updateModuleDto.label;
+
+    return this.modulesRepository.save(module);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} module`;
+  async remove(id: number): Promise<Module> {
+    const module = await this.findOne(id);
+
+    return this.modulesRepository.remove(module);
   }
 }
