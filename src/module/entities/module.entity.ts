@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/config/base.entity';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'module' })
+@Entity({ name: 'ms_module' })
 export class Module extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'pk_module_id' })
   id?: number;

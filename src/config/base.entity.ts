@@ -1,4 +1,4 @@
-import { Column } from 'typeorm';
+import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseEntity {
   @Column({
@@ -36,7 +36,7 @@ export abstract class BaseEntity {
   })
   approvedBy?: string;
 
-  @Column({
+  @CreateDateColumn({
     type: 'timestamp',
     name: 'created_date',
     nullable: false,
@@ -44,7 +44,11 @@ export abstract class BaseEntity {
   })
   createdDate?: Date;
 
-  @Column({ type: 'timestamp', name: 'last_updated_date', nullable: true })
+  @UpdateDateColumn({
+    type: 'timestamp',
+    name: 'last_updated_date',
+    nullable: true,
+  })
   lastUpdatedDate?: Date;
 
   @Column({ type: 'timestamp', name: 'approved_date', nullable: true })
